@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Start -> Reveal</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --accent:#9be7ff;
+      --muted:#9aa6bf;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color:white;
+    }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:30px;
+    }
+
+    .card{
+      max-width:700px;
+      width:100%;
+      padding:40px;
+      background:rgba(255,255,255,0.05);
+      border-radius:14px;
+    }
+
+    button.start{
+      padding:15px 40px;
+      font-size:20px;
+      border-radius:12px;
+      border:none;
+      cursor:pointer;
+      background:#111;
+      color:var(--accent);
+    }
+
+    .hidden{ display:none; }
+
+    .message{
+      font-size:24px;
+      line-height:1.5;
+      white-space:pre-wrap;
+      opacity:0;
+      transition:opacity .5s ease;
+    }
+    .message.visible{ opacity:1; }
+
+    .typed::after{
+      content:"";
+      width:10px;
+      height:20px;
+      display:inline-block;
+      margin-left:6px;
+      background:var(--accent);
+      animation:blink 1s infinite;
+    }
+
+    @keyframes blink{
+      0%,50%{ opacity:1 }
+      50.1%,100%{ opacity:0 }
+    }
+
+    #batmanImage{
+      margin-top:25px;
+      width:100%;
+      max-width:500px;
+      border-radius:12px;
+      opacity:0;
+      transition:opacity .8s ease;
+    }
+    #batmanImage.visible{
+      opacity:1;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <button id="startBtn" class="start">Start</button>
+      <div id="message" class="message"></div>
+      <img id="batmanImage" src="batman.jpg" alt="Batman">
+    </div>
+  </div>
+
+  <script>
+    const messageEl = document.getElementById("message");
+    const startBtn = document.getElementById("startBtn");
+    const batmanImg = document.getElementById("batmanImage");
+
+    const lines = [
+      "I do not know how to say this but",
+      "",
+      "I'm batman"
+    ];
+
+    function typeLines(lines, el, finished){
+      let lineIndex = 0;
+      let charIndex = 0;
+
+      el.classList.add("visible");
+      el.classList.add("typed");
+
+      function typeChar(){
+        if(lineIndex >= lines.length){
+          el.classList.remove("typed");
+          if(finished) finished();
+          return;
+        }
+
+        const currentLine = lines[lineIndex];
+
+        if(charIndex < currentLine.length){
+          el.textContent += currentLine.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeChar, 40);
+        } else {
+          el.textContent += "\n";
+          charIndex = 0;
+          lineIndex++;
+          setTimeout(typeChar, 500);
+        }
+      }
+
+      typeChar();
+    }
+
+    startBtn.addEventListener("click", () => {
+      startBtn.classList.add("hidden");
+
+      typeLines(lines, messageEl, () => {
+        batmanImg.classList.add("visible");
+      });
+    });
+  </script>
+</body>
+</html>
